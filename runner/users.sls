@@ -37,5 +37,3 @@ runner_bash_logout:
   file.comment:
     - name: /home/gitlab-runner/.bash_logout
     - regex: ^(.*)$
-    - requires:
-      - pkg: runner_packages
