@@ -30,10 +30,16 @@ runner_user:
       - group: docker_group
       - pkg: runner_packages
 
+{%- set testing = salt['pillar.get']('testing') %}
+{% if not testing %}
+
 # COMMENT BASH LOGOUT SCRIPT
 # The default .bash_logout script in Ubuntu causes problems and causes GitLab CI/CD jobs to fail.  Therefore, we need
-# to comment out this file.  We use the regex to match everything to ensure everything is commented.
+# to comment out this file.  We use the regex to match everything to ensure everything is commented.  This file will not
+# be available when running tests inside Docker, so this state is only run when not testing.
 runner_bash_logout:
   file.comment:
     - name: /home/gitlab-runner/.bash_logout
     - regex: ^(.*)$
+
+{% endif %}

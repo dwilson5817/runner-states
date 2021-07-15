@@ -38,3 +38,10 @@ provisioner:
     base:
       "*":
         - runner
+  pillars:
+    top.sls:
+      base:
+        "*":
+          - runner
+    runner.sls:
+      testing: true
