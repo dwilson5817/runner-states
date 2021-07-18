@@ -45,3 +45,7 @@ provisioner:
           - runner
     runner.sls:
       testing: true
+      docker:
+        pkg:
+          docker:
+            use_upstream: repo
