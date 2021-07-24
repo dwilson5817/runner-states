@@ -38,8 +38,15 @@ runner_user:
 # to comment out this file.  We use the regex to match everything to ensure everything is commented.  This file will not
 # be available when running tests inside Docker, so this state is only run when not testing.
 runner_bash_logout:
-  file.comment:
+  file.managed:
     - name: /home/gitlab-runner/.bash_logout
-    - regex: ^(.*)$
+    - contents: |
+      - # # ~/.bash_logout: executed by bash(1) when login shell exits.
+      - #
+      - # # when leaving the console clear the screen to increase privacy
+      - #
+      - # if [ "$SHLVL" = 1 ]; then
+      - #     [ -x /usr/bin/clear_console ] && /usr/bin/clear_console -q
+      - # fi
 
 {% endif %}
