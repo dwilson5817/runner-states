@@ -49,3 +49,5 @@ provisioner:
         pkg:
           docker:
             use_upstream: repo
+            daemon_config:
+              storage-driver: vfs
