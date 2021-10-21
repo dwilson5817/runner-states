@@ -6,47 +6,13 @@ docker_group:
   group.present:
     - name: docker
 
-# CREATE DYLAN USER
-# Ensure dylan user exists.  This is a personal user account on the machine used for maintenance and diagnostics
-# although it is becoming less necessary with Salt.
-dylan_user:
+# ADD DYLAN TO DOCKER GROUP
+# Ensure dylan user exists.  Add the dylan user to the docker group.  This user is created by the core states but they
+# won't be run in testing.  Create the dylan user if necessary and add them to the docker group.
+dylan_docker_group:
   user.present:
     - name: dylan
     - groups:
-      - sudo
       - docker
-    - requires:
+    - require:
       - group: docker_group
-
-# CREATE RUNNER USER
-# Ensure gitlab-runner user exists.  This is the user that build jobs run as so we ensure it is in the docker group and
-# therefore has access to Docker.  This user should have been created when installing the gitlab-runner package.
-runner_user:
-  user.present:
-    - name: gitlab-runner
-    - groups:
-      - docker
-    - requires:
-      - group: docker_group
-      - pkg: runner_packages
-
-{%- set testing = salt['pillar.get']('testing') %}
-{% if not testing %}
-
-# COMMENT BASH LOGOUT SCRIPT
-# The default .bash_logout script in Ubuntu causes problems and causes GitLab CI/CD jobs to fail.  Therefore, we need
-# to comment out this file.  We use the regex to match everything to ensure everything is commented.  This file will not
-# be available when running tests inside Docker, so this state is only run when not testing.
-runner_bash_logout:
-  file.managed:
-    - name: /home/gitlab-runner/.bash_logout
-    - contents: |
-      - # # ~/.bash_logout: executed by bash(1) when login shell exits.
-      - #
-      - # # when leaving the console clear the screen to increase privacy
-      - #
-      - # if [ "$SHLVL" = 1 ]; then
-      - #     [ -x /usr/bin/clear_console ] && /usr/bin/clear_console -q
-      - # fi
-
-{% endif %}

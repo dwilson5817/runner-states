@@ -5,5 +5,5 @@
 include:
   - docker.software
   - docker.compose
-  - .packages
   - .users
+  - .container
