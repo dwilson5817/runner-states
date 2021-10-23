@@ -11,3 +11,20 @@ runner_container:
     - binds:
       - /var/run/docker.sock:/var/run/docker.sock
       - gitlab-runner-config:/etc/gitlab-runner
+
+# ENSURE IPv6 NAT CONTAINER IS RUNNING
+# NAT!  On IPv6?  Who hurt you?  Okay, this isn't a permanent solution but right now Docker IPv6 support is half-baked
+# and it's difficult to use and I don't like that.  So for now, we essentially use a like for like IPv6 implementation
+# of the way Docker networking works for IPv4.
+#
+# See more: https://github.com/robbertkl/docker-ipv6nat#why-would-i-need-this
+ipv6nat_container:
+  docker_container.running:
+    - name: ipv6nat
+    - image: robbertkl/ipv6nat
+    - privileged: true
+    - network_mode: host
+    - restart_policy: unless-stopped
+    - binds:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /lib/modules:/lib/modules:ro
