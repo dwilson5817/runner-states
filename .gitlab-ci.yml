@@ -1,10 +1,9 @@
-stages:
-  - test
+image: gitlab.dylanwilson.dev:5050/infrastructure/kitchen-base:latest
+
+before_script:
+  - bundler install
 
 test:
-  image: gitlab.dylanwilson.dev:5050/infrastructure/kitchen-base:latest
   stage: test
-  before_script:
-    - bundler install
   script:
     - bundler exec kitchen test
